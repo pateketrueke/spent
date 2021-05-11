@@ -44,7 +44,7 @@ function extract(input, flags = {}) {
 
   input.split('\n')
     .map(line => {
-      const times = line.trim().match(/(?:\+\d+|\d{2}:\d{2}|\d{4}[/.-]?\d{2}[/.-]?\d{2}|[a-z]{3,}\s+\d{1,2},?\s+\d{4}|\d{2}[/.-]?\d{2}[/.-]?\d{4})/gi);
+      const times = line.trim().match(/(?:\+\d+|\d{2}:\d{2}|\d{4}[/-]?\d{2}[/-]?\d{2}|\d{2}[/-]?\d{2}[/-]?\d{4}|[a-z]{3,}\s+\d{1,2},?\s+\d{4})/gi);
       const chunk = [];
 
       let current;
