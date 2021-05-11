@@ -1,12 +1,25 @@
 {
   "name": "spent",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.1",
+  "description": "Time tracking for sloths",
+  "main": "main.js",
+  "bin": {
+    "spent": "./cli"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "time",
+    "spent",
+    "hours",
+    "track",
+    "effort",
+    "tracker"
+  ],
+  "author": "Alvaro Cabrera <yo@soypache.co>",
+  "license": "MIT",
+  "dependencies": {
+    "wargs": "^0.9.3"
+  }
 }
