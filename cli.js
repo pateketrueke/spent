@@ -17,12 +17,12 @@ Options:
     --gt  Filter out past dates
 
 Examples:
-  spent "13:15 16:20" --short
+  spent 13:15 16:20 --short
   spent - --gt "${month} 1, ${year}" --lt "3 hours ago" < journal.txt
-  spent "${current}-09 0:10 0:20; ${current}-16 00:10 02:30" --from "3 weeks ago" --lte "yesterday"
+  spent ${current}-09 00:10 00:20 ${current}-16 00:10 02:30 --from "3 weeks ago" --lte yesterday
   `;
 
-if (argv.flags.help) {
+if (!argv._.length || argv.flags.help) {
   console.log(USAGE_INFO);
   process.exit(1);
 }

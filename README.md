@@ -28,6 +28,8 @@ Processing rules for parsing:
 
 > All values MUST be paired, and the first item of each time-slice MUST be in `HH:MM` format, followed by one-or-more `+N` or the ending time in `HH:MM` format.
 
+## Usage example
+
 Create a **journal.txt** file with this contents:
 
 ```txt
@@ -55,7 +57,7 @@ spent 13:20 15:16
 
 I am used to have a journal file on most projects I work following the [Markdown](https://daringfireball.net/projects/markdown/syntax) or [ToDone](https://packagecontrol.io/packages/ToDone) formatting rules.
 
-After trying some time-trackers, pomodoro, CLI programs, Android apps, etc. and I'm still unconvinced if they work for me:
+After trying some time-trackers, pomodoro, CLI programs, Android apps, etc. and I'm still unconvinced if they work for me because:
 
 - Having to switch-context out from my editor just to start/pause/stop a timer is a bummer.
 - Almost surely I'll not start any timer et all, or may I forgot to pause/stop it when switching tasks.
