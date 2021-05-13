@@ -1,6 +1,6 @@
 ci: deps
 	@npm run lint
-	@npm run test:ci
+	@TZ=UTC npm run test:ci
 ifneq ($(CI),)
 	@npm run codecov
 endif
