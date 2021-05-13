@@ -46,19 +46,32 @@ function todate(date, times) {
 }
 
 function totime(date, value) {
-  let time = date;
+  let out = date;
   if (value === 'yesterday') value = '1 day ago';
+  if (value === 'tomorrow') value = 'next day';
   if (value.includes(' ago')) {
     const past = parseInt(value, 10) * 1000;
 
-    if (value.includes('week')) time -= past * ((3600 * 24) * 7);
-    else if (value.includes('day')) time -= past * (3600 * 24);
-    else if (value.includes('hour')) time -= past * 3600;
-    else if (value.includes('minute')) time -= past / 60;
-    else throw new TypeError(`Missing time unit, given '${value}'`);
+    if (value.includes('week')) out -= past * ((3600 * 24) * 7);
+    else if (value.includes('day')) out -= past * (3600 * 24);
+    else if (value.includes('hour')) out -= past * 3600;
+    else if (value.includes('minute')) out -= past / 60;
+    else throw new TypeError(`Missing past-time unit, given '${value}'`);
+  }
+  if (value.includes('next ')) {
+    const num = value.match(/\d+/);
+    const future = (num
+      ? parseInt(num[0], 10)
+      : 1) * 1000;
+
+    if (value.includes('week')) out += future * ((3600 * 24) * 7);
+    else if (value.includes('day')) out += future * (3600 * 24);
+    else if (value.includes('hour')) out += future * 3600;
+    else if (value.includes('minute')) out += future / 60;
+    else throw new TypeError(`Missing future-time unit, given '${value}'`);
   }
 
-  return value.match(/\d{4}/) ? parse(value) : time;
+  return value.match(/\d{4}/) ? parse(value) : out;
 }
 
 function filter(date, opts) {
@@ -81,12 +94,12 @@ function extract(input) {
   const stack = [];
 
   input.split('\n')
-    .map(line => {
+    .forEach(line => {
       const times = line.trim().match(/(?:\+\d+|\d{2}:\d{2}|\d{4}[/-]?\d{2}[/-]?\d{2}|\d{2}[/-]?\d{2}[/-]?\d{4}|[a-z]{3,}\s+\d{1,2},?\s+\d{4})/gi);
       const chunk = [];
 
       let current;
-      for (let i = 0; times && i < times.length; i+= 1) {
+      for (let i = 0; times && i < times.length; i += 1) {
         if (/\d{4}/.test(times[i])) {
           if (current) chunk.push(current);
           current = null;
@@ -148,7 +161,7 @@ function append(current, times) {
 
 function format(stack, flags = {}) {
   let current = Date.now();
-  let values = []
+  let values = [];
 
   const dates = [];
 
@@ -185,6 +198,8 @@ module.exports = {
   format,
   append,
   extract,
+  todate,
+  totime,
   clamp,
   split,
   hours,
