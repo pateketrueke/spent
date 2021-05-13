@@ -159,7 +159,7 @@ function format(stack, flags = {}) {
     values = [];
   }
 
-  const entries = stack.reduce((current, chunk) => {
+  stack.forEach(chunk => {
     chunk.forEach(entry => {
       if (entry.now) {
         if (values.length) push();
@@ -171,8 +171,7 @@ function format(stack, flags = {}) {
       }
     });
     if (values.length) push();
-    return current;
-  }, []);
+  });
 
   const filtered = dates.filter(entry => filter(entry.date, flags));
   const total = filtered.reduce((prev, cur) => prev + cur.minutes, 0);
