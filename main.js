@@ -5,10 +5,10 @@ function pad(num) {
 function int(val) {
   const num = parseInt(/\d/.test(val) ? val.match(/\d+/)[0] : 1, 10);
 
-  if (val.includes('week')) return num * ((3600 * 24) * 7);
-  if (val.includes('day')) return num * (3600 * 24);
+  if (val.includes('week')) return num * 604800;
+  if (val.includes('day')) return num * 86400;
   if (val.includes('hour')) return num * 3600;
-  if (val.includes('minute')) return num / 60;
+  if (val.includes('minute')) return num * 60;
 
   throw new TypeError(`Missing time unit, given '${val}'`);
 }
