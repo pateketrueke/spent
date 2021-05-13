@@ -1,6 +1,10 @@
+TZ=UTC
+
+export TZ
+
 ci: deps
 	@npm run lint
-	@TZ=UTC npm run test:ci
+	@npm run test:ci
 ifneq ($(CI),)
 	@npm run codecov
 endif
