@@ -15,7 +15,7 @@
     "test:unit": "npm run test:run tests/*.spec.js --",
     "coverage": "nyc --x '**/tests/**' -x '**/*.spec.js'",
     "coverage:unit": "npm run coverage -- npm run test:unit",
-    "codecov": "codecov --file=coverage/lcov.info -e TRAVIS_NODE_VERSION",
+    "codecov": "codecov --file=coverage/lcov.info",
     "report": "nyc report",
     "pretest": "npm run lint"
   },
