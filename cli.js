@@ -18,10 +18,10 @@ Examples:
   spent 13:15 16:20 --short
   spent - --since "${month} 1, ${year}" --until "3 hours ago" < journal.txt
   spent ${current}-09 00:10 00:20 ${current}-16 00:10 02:30 --from "3 weeks ago" --until yesterday
-  `;
+`;
 
 if (!argv._.length || argv.flags.help) {
-  console.log(USAGE_INFO);
+  process.stdout.write(`${USAGE_INFO}\n`);
   process.exit(1);
 }
 
@@ -29,18 +29,18 @@ if (argv._[0] === '-') {
   process.stdin.pipe(new Transform({
     transform(entry, enc, callback) {
       const content = Buffer.from(entry, enc).toString();
-      const result = extract(content);
+      const result = format(extract(content), argv.flags);
 
-      callback(null, `${format(result, argv.flags)}\n`);
-    }
+      callback(null, `${result}\n`);
+    },
   })).pipe(process.stdout);
 } else {
   try {
-    const result = extract(argv._.join(' '));
+    const result = format(extract(argv._.join(' ')), argv.flags);
 
-    console.log(format(result, argv.flags));
+    process.stdout.write(`${result}\n`);
   } catch (e) {
-    console.error(e.message);
+    process.stderr.write(`${e.message}\n`);
     process.exit(2);
   }
 }

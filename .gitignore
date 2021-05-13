@@ -1,4 +1,6 @@
 .git
 .DS_Store
+.nyc_output
+coverage
 journal.txt
 node_modules

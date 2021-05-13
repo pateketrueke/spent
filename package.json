@@ -7,7 +7,17 @@
     "spent": "./cli"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "npm run test:unit --",
+    "lint": "eslint *.js tests",
+    "dev": "npm run test:unit -- -w",
+    "test:ci": "npm run coverage:unit && npm run report -- -r ${LCOV_OUTPUT:-lcov}",
+    "test:run": "NODE_ENV=test _mocha --exit --colors --recursive --watch-files 'tests/**' --watch-files '*.js' -bR spec",
+    "test:unit": "npm run test:run tests/*.spec.js --",
+    "coverage": "nyc --x '**/tests/**' -x '**/*.spec.js'",
+    "coverage:unit": "npm run coverage -- npm run test:unit",
+    "codecov": "codecov --file=coverage/lcov.info -e TRAVIS_NODE_VERSION",
+    "report": "nyc report",
+    "pretest": "npm run lint"
   },
   "keywords": [
     "time",
@@ -21,5 +31,14 @@
   "license": "MIT",
   "dependencies": {
     "wargs": "^0.9.3"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "codecov": "^3.8.2",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.4.0",
+    "nyc": "^15.1.0"
   }
 }
