@@ -10,16 +10,14 @@ const USAGE_INFO = `
 Usage: spent <INPUT> [OPTIONS]
 
 Options:
-  --from  Sets the current date for verbal times
-   --lte  Filter out future dates (inclusive)
-    --lt  Filter out future dates
-   --gte  Filter out past dates (inclusive)
-    --gt  Filter out past dates
+   --from  Set date for verbal times
+  --until  Filter out future dates
+  --since  Filter out past dates
 
 Examples:
   spent 13:15 16:20 --short
-  spent - --gt "${month} 1, ${year}" --lt "3 hours ago" < journal.txt
-  spent ${current}-09 00:10 00:20 ${current}-16 00:10 02:30 --from "3 weeks ago" --lte yesterday
+  spent - --since "${month} 1, ${year}" --until "3 hours ago" < journal.txt
+  spent ${current}-09 00:10 00:20 ${current}-16 00:10 02:30 --from "3 weeks ago" --until yesterday
   `;
 
 if (!argv._.length || argv.flags.help) {
@@ -31,16 +29,16 @@ if (argv._[0] === '-') {
   process.stdin.pipe(new Transform({
     transform(entry, enc, callback) {
       const content = Buffer.from(entry, enc).toString();
-      const result = extract(content, argv.flags);
+      const result = extract(content);
 
-      callback(null, `${format(result)}\n`);
+      callback(null, `${format(result, argv.flags)}\n`);
     }
   })).pipe(process.stdout);
 } else {
   try {
-    const result = extract(argv._.join(' '), argv.flags);
+    const result = extract(argv._.join(' '));
 
-    console.log(format(result));
+    console.log(format(result, argv.flags));
   } catch (e) {
     console.error(e.message);
     process.exit(2);

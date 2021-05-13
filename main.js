@@ -2,8 +2,16 @@ function pad(num) {
   return `0${num}`.substr(-2);
 }
 
+function now(date) {
+  return date ? new Date(date) : new Date();
+}
+
 function time(value) {
   return parseInt(value, 10);
+}
+
+function parse(date) {
+  return Date.parse(`${date} 00:00:00`);
 }
 
 function short(date) {
@@ -28,14 +36,44 @@ function clamp(before, after) {
   };
 }
 
-// FIXME: apply filters...
-function filter(date, opts) {
-  // from lt lte gt gte
-  // console.log({date,opts});
-  return true;
+function todate(date, times) {
+  const slice = now(date);
+
+  if (times) {
+    slice.setHours(times[0], times[1]);
+  }
+  return slice;
 }
 
-function extract(input, flags = {}) {
+function totime(date, value) {
+  let time = date;
+  if (value === 'yesterday') value = '1 day ago';
+  if (value.includes(' ago')) {
+    const past = parseInt(value, 10) * 1000;
+
+    if (value.includes('week')) time -= past * ((3600 * 24) * 7);
+    else if (value.includes('day')) time -= past * (3600 * 24);
+    else if (value.includes('hour')) time -= past * 3600;
+    else if (value.includes('minute')) time -= past / 60;
+    else throw new TypeError(`Missing time unit, given '${value}'`);
+  }
+
+  return value.match(/\d{4}/) ? parse(value) : time;
+}
+
+function filter(date, opts) {
+  let current = now();
+  let begin = 0;
+  let end = Infinity;
+
+  if (opts.from) current = totime(current, opts.from);
+  if (opts.until) end = totime(current, opts.until);
+  if (opts.since) begin = totime(current, opts.since);
+
+  return date >= begin && date <= end;
+}
+
+function extract(input) {
   if (!input || typeof input !== 'string') {
     throw new TypeError(`Invalid input, given '${input}'`);
   }
@@ -52,12 +90,7 @@ function extract(input, flags = {}) {
         if (/\d{4}/.test(times[i])) {
           if (current) chunk.push(current);
           current = null;
-
-          const next = Date.parse(times[i]);
-
-          if (!filter(next, flags)) break;
-
-          chunk.push({ now: next });
+          chunk.push({ now: parse(times[i]) });
         } else if (times[i].charAt() === '+') {
           if (current) {
             current.add.push(time(times[i].substr(1)));
@@ -92,7 +125,7 @@ function extract(input, flags = {}) {
   return stack;
 }
 
-function append(now, times) {
+function append(current, times) {
   let sum = 0;
 
   if (times.end && times.end[0] < times.begin[0]) {
@@ -110,19 +143,19 @@ function append(now, times) {
       : times.add;
   }
 
-  return sum;
+  return { date: todate(current, times.begin), total: sum };
 }
 
-function format(stack, kind = 'short') {
-  let now = Date.now();
+function format(stack, flags = {}) {
+  let current = Date.now();
   let values = []
 
   const dates = [];
 
   function push() {
-    const minutes = values.reduce((prev, cur) => prev + cur, 0);
+    const minutes = values.reduce((prev, cur) => prev + cur.total, 0);
 
-    dates.push({ date: new Date(now), minutes });
+    dates.push({ date: values[0].date, minutes });
     values = [];
   }
 
@@ -130,20 +163,21 @@ function format(stack, kind = 'short') {
     chunk.forEach(entry => {
       if (entry.now) {
         if (values.length) push();
-        now = entry.now;
+        current = entry.now;
       } else if (entry.diff) {
-        values.push(append(now, entry.diff));
+        values.push(append(current, entry.diff));
       } else {
-        values.push(append(now, entry));
+        values.push(append(current, entry));
       }
     });
     if (values.length) push();
     return current;
   }, []);
 
-  const total = dates.reduce((prev, cur) => prev + cur.minutes, 0);
+  const filtered = dates.filter(entry => filter(entry.date, flags));
+  const total = filtered.reduce((prev, cur) => prev + cur.minutes, 0);
 
-  return dates.map(entry => {
+  return filtered.map(entry => {
     return `${short(entry.date)}, ${hours(entry.minutes)}`;
   }).concat(`Total time spent ${hours(total)}`).join('\n');
 }
