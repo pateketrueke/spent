@@ -1,17 +1,22 @@
 {
   "name": "spent",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Time tracking for sloths",
   "main": "main.js",
   "bin": {
     "spent": "./cli"
   },
+  "files": [
+    "cli",
+    "cli.js",
+    "main.js"
+  ],
   "scripts": {
     "test": "npm run test:unit --",
     "lint": "eslint *.js tests",
     "dev": "npm run test:unit -- -w",
     "test:ci": "npm run coverage:unit && npm run report -- -r ${LCOV_OUTPUT:-lcov}",
-    "test:run": "NODE_ENV=test _mocha --exit --colors --recursive --watch-files 'tests/**' --watch-files '*.js' -bR spec",
+    "test:run": "NODE_ENV=test TZ=UTC _mocha --exit --colors --recursive --watch-files 'tests/**' --watch-files '*.js' -bR spec",
     "test:unit": "npm run test:run tests/*.spec.js --",
     "coverage": "nyc --x '**/tests/**' -x '**/*.spec.js'",
     "coverage:unit": "npm run coverage -- npm run test:unit",
@@ -29,6 +34,10 @@
   ],
   "author": "Alvaro Cabrera <yo@soypache.co>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pateketrueke/spent"
+  },
   "dependencies": {
     "wargs": "^0.9.3"
   },

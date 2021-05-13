@@ -1,7 +1,3 @@
-TZ=UTC
-
-export TZ
-
 ci: deps
 	@npm run lint
 	@npm run test:ci

@@ -2,6 +2,7 @@
 
 [![Build Status](https://github.com/pateketrueke/spent/workflows/build/badge.svg)](https://github.com/pateketrueke/spent/actions)
 [![codecov](https://codecov.io/gh/pateketrueke/spent/branch/master/graph/badge.svg)](https://codecov.io/gh/pateketrueke/spent)
+[![NPM version](https://badge.fury.io/js/spent.svg)](http://badge.fury.io/js/spent)
 
 > Currently under development, install it through GitHub:
 
