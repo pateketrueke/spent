@@ -2,6 +2,17 @@ function pad(num) {
   return `0${num}`.substr(-2);
 }
 
+function int(val) {
+  const num = parseInt(/\d/.test(val) ? val.match(/\d+/)[0] : 1, 10);
+
+  if (val.includes('week')) return num * ((3600 * 24) * 7);
+  if (val.includes('day')) return num * (3600 * 24);
+  if (val.includes('hour')) return num * 3600;
+  if (val.includes('minute')) return num / 60;
+
+  throw new TypeError(`Missing time unit, given '${val}'`);
+}
+
 function now(date) {
   return date ? new Date(date) : new Date();
 }
@@ -49,27 +60,8 @@ function totime(date, value) {
   let out = date;
   if (value === 'yesterday') value = '1 day ago';
   if (value === 'tomorrow') value = 'next day';
-  if (value.includes(' ago')) {
-    const past = parseInt(value, 10) * 1000;
-
-    if (value.includes('week')) out -= past * ((3600 * 24) * 7);
-    else if (value.includes('day')) out -= past * (3600 * 24);
-    else if (value.includes('hour')) out -= past * 3600;
-    else if (value.includes('minute')) out -= past / 60;
-    else throw new TypeError(`Missing past-time unit, given '${value}'`);
-  }
-  if (value.includes('next ')) {
-    const num = value.match(/\d+/);
-    const future = (num
-      ? parseInt(num[0], 10)
-      : 1) * 1000;
-
-    if (value.includes('week')) out += future * ((3600 * 24) * 7);
-    else if (value.includes('day')) out += future * (3600 * 24);
-    else if (value.includes('hour')) out += future * 3600;
-    else if (value.includes('minute')) out += future / 60;
-    else throw new TypeError(`Missing future-time unit, given '${value}'`);
-  }
+  if (value.includes(' ago')) out -= int(value) * 1000;
+  if (value.includes('next ')) out += int(value) * 1000;
 
   return value.match(/\d{4}/) ? parse(value) : out;
 }
