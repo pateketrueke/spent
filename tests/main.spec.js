@@ -1,7 +1,10 @@
+const tk = require('timekeeper');
 const { expect } = require('chai');
 const { extract, format } = require('../main');
 
 /* global describe, it */
+
+tk.freeze(1620604800000);
 
 const short = extract('01:23 01:40');
 const dates = extract(`
@@ -53,7 +56,7 @@ Total time spent 10:15
 `.trim());
 
     expect(format(short)).to.eql(`
-2021-05-13, 0:17
+2021-05-10, 0:17
 Total time spent 0:17
 `.trim());
   });
