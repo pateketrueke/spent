@@ -4,10 +4,10 @@
 [![codecov](https://codecov.io/gh/pateketrueke/spent/branch/master/graph/badge.svg)](https://codecov.io/gh/pateketrueke/spent)
 [![NPM version](https://badge.fury.io/js/spent.svg)](http://badge.fury.io/js/spent)
 
-> Currently under development, install it through GitHub:
+Get it through:
 
 ```bash
-npm i -g github:pateketrueke/spent
+npm i -g spent
 ```
 
 ## How it works?
@@ -57,6 +57,27 @@ It also works with plain time-slices as arguments:
 ```bash
 spent 13:20 15:16
 ```
+
+Filtering can be done through `--since` and `--until` keywords, e.g.
+
+- `last week` equals to `1 week ago`
+- `yesterday` equals to `1 day ago`
+- `tomorrow` equals to `next day`
+- `1 week ago`
+- `90 minutes ago`
+- `next week`
+- `next 24 hours`
+
+> Only `minute`, `hour`, `day` and `week` keywords are supported.
+
+Use `--from` to set the date for resolving relative dates, e.g.
+
+```bash
+spent --from 2021-05-01 --until "next 3 weeks"
+```
+
+> Otherwise, the actual date will be used instead.
+
 ## Motivation
 
 I am used to have a journal file on most projects I work following the [Markdown](https://daringfireball.net/projects/markdown/syntax) or [ToDone](https://packagecontrol.io/packages/ToDone) formatting rules.
