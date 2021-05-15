@@ -10,7 +10,7 @@ function int(val) {
   if (val.includes('hour')) return num * 3600;
   if (val.includes('minute')) return num * 60;
 
-  throw new TypeError(`Missing time unit, given '${val}'`);
+  throw new TypeError(`Invalid time unit, given '${val}'`);
 }
 
 function now(date) {
@@ -58,12 +58,14 @@ function todate(date, times) {
 
 function totime(date, value) {
   let out = date;
+  if (value === 'last week') value = '1 week ago';
   if (value === 'yesterday') value = '1 day ago';
   if (value === 'tomorrow') value = 'next day';
   if (value.includes(' ago')) out -= int(value) * 1000;
-  if (value.includes('next ')) out += int(value) * 1000;
-
-  return value.match(/\d{4}/) ? parse(value) : out;
+  else if (value.includes('next ')) out += int(value) * 1000;
+  else if (value.match(/\d{4}/)) return parse(value);
+  else throw new TypeError(`Invalid time keyword, given '${value}'`);
+  return out;
 }
 
 function filter(date, opts) {
@@ -86,7 +88,7 @@ function extract(input) {
   const stack = [];
 
   input.split('\n')
-    .forEach(line => {
+    .forEach((line, nth) => {
       const times = line.trim().match(/(?:\+\d+|\d{2}:\d{2}|\d{4}[/-]?\d{2}[/-]?\d{2}|\d{2}[/-]?\d{2}[/-]?\d{4}|[a-z]{3,}\s+\d{1,2},?\s+\d{4})/gi);
       const chunk = [];
 
@@ -109,7 +111,7 @@ function extract(input) {
           if (current) chunk.push(current);
           current = null;
 
-          if (!after) throw new TypeError(`Missing time after '${before}'`);
+          if (!after) throw new TypeError(`Missing time after '${before}' at line ${nth + 1}`);
           if (after.charAt() === '+') {
             current = {
               begin: split(before),
@@ -143,9 +145,7 @@ function append(current, times) {
     sum -= times.begin[1];
     sum += times.end[1];
   } else {
-    sum += Array.isArray(times.add)
-      ? times.add.reduce((prev, cur) => prev + cur, 0)
-      : times.add;
+    sum += [].concat(times.add).reduce((prev, cur) => prev + cur, 0);
   }
 
   return { date: todate(current, times.begin), total: sum };

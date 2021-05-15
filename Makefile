@@ -5,6 +5,9 @@ ifneq ($(CI),)
 	@npm run codecov
 endif
 
+dev: deps
+	@npm run dev
+
 test: deps
 	@LCOV_OUTPUT=html npm run test:ci
 
