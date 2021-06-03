@@ -142,9 +142,10 @@ Total time spent 6:26
   });
 
   it('should handle minutes, hours, days and weeks', () => {
+    expect(format(dates, { since: 'this week' })).to.eql('Total time spent 0:00');
     expect(format(dates, { since: 'last week' })).to.eql('Total time spent 0:00');
     expect(format(dates, { until: 'next 24 hours' })).to.eql('Total time spent 0:00');
-    expect(format(dates, { from: '3 days ago' })).to.contains('Total time spent 10:15');
+    expect(format(dates, { from: 'last 3 days' })).to.contains('Total time spent 10:15');
     expect(format(dates, { until: 'next 90 minutes' })).to.eql('Total time spent 0:00');
   });
 });

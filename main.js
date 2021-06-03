@@ -58,10 +58,19 @@ function todate(date, times) {
 
 function totime(date, value) {
   let out = date;
+
+  const match = value.match(/last (\d+) (day|week|hour)/);
+
+  if (match) value = `${parseInt(match[1], 10)} ${match[2]} ago`;
   if (value === 'last week') value = '1 week ago';
   if (value === 'yesterday') value = '1 day ago';
   if (value === 'tomorrow') value = 'next day';
-  if (value.includes(' ago')) out -= int(value) * 1000;
+  if (value === 'this week') {
+    const day = date.getDay();
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+
+    out = date.setDate(diff);
+  } else if (value.includes(' ago')) out -= int(value) * 1000;
   else if (value.includes('next ')) out += int(value) * 1000;
   else if (value.match(/\d{4}/)) return parse(value);
   else throw new TypeError(`Invalid time keyword, given '${value}'`);
