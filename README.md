@@ -60,6 +60,7 @@ spent 13:20 15:16
 
 Filtering can be done through `--since` and `--until` keywords, e.g.
 
+- `this week` would take the initial week-day
 - `last week` equals to `1 week ago`
 - `yesterday` equals to `1 day ago`
 - `tomorrow` equals to `next day`
@@ -67,6 +68,7 @@ Filtering can be done through `--since` and `--until` keywords, e.g.
 - `90 minutes ago`
 - `next week`
 - `next 24 hours`
+- `last 20 days`
 
 > Only `minute`, `hour`, `day` and `week` keywords are supported.
 
