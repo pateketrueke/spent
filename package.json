@@ -1,6 +1,6 @@
 {
   "name": "spent",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Time tracking for sloths",
   "main": "main.js",
   "bin": {
