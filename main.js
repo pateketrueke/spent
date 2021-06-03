@@ -61,7 +61,7 @@ function totime(date, value) {
 
   const match = value.match(/last (\d+) (day|week|hour)/);
 
-  if (match) value = `${parseInt(match[1], 10)} ${match[2]} ago`;
+  if (match) value = `${match[1]} ${match[2]} ago`;
   if (value === 'last week') value = '1 week ago';
   if (value === 'yesterday') value = '1 day ago';
   if (value === 'tomorrow') value = 'next day';
